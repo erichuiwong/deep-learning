@@ -154,9 +154,13 @@ def test_rnn(RNN, train_on_gpu):
     b = torch.from_numpy(a)
     hidden = rnn.init_hidden(batch_size)
     
-    if(train_on_gpu):
-        rnn.cuda()
-        b = b.cuda()
+    if train_on_gpu:
+        if torch.cuda.is_available():
+            rnn.cuda()
+            b = b.cuda()
+        else:
+            rnn.to('mps')
+            b = b.to('mps')
     
     output, hidden_out = rnn(b, hidden)
     
